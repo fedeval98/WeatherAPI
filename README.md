@@ -60,14 +60,15 @@ spring.datasource.username=tu_usuario
 spring.datasource.password=tu_contraseña
 ```
 
-##API Key de OpenWeather
+## API Key de OpenWeather
 
 Registra tu API Key en OpenWeather y agrégala en tu `application.properties`:
 - Crea una variable de entorno en el sistema o utiliza un archivo .env para guardar la API_KEY.
-- Recorda que tu API_KEY es una variable secreta, no la incluyas en tu repositorio.
 ```
 openweather.api.key=${API_KEY}
 ```
+- Recorda que tu API_KEY es una variable secreta, no la incluyas en tu repositorio.
+
 ## Seguridad
 Este proyecto usa JWT para la autenticación. Para generar y validar tokens, configura los parámetros de seguridad en tu archivo de propiedades.
 
