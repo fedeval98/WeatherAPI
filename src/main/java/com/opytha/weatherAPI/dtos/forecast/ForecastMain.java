@@ -1,9 +1,9 @@
-package com.opytha.weatherAPI.dtos.weather;
+package com.opytha.weatherAPI.dtos.forecast;
 
 import lombok.Data;
 
 @Data
-public class Main {
+public class ForecastMain {
     private double temp;
     private double feels_like;
     private double temp_min;
@@ -12,4 +12,5 @@ public class Main {
     private short sea_level;
     private short grnd_level;
     private short humidity;
+    private double temp_kf;
 }

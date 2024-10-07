@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class Clouds {
-    private long all;
+    private short all;
 }

@@ -2,6 +2,7 @@ package com.opytha.weatherAPI.services.implementations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.opytha.weatherAPI.dtos.ForecastData;
 import com.opytha.weatherAPI.dtos.WeatherData;
 import com.opytha.weatherAPI.services.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,5 +38,24 @@ public class WeatherServiceImplementation implements WeatherService {
         }
 
         return weatherData;
+    }
+
+    @Override
+    public ForecastData getForecastByCityName(String cityName) {
+        // Construyo la URL de la API de OpenWeatherMap con el nombre de la ciudad
+        String url = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&units=metric" + "&lang=es" + "&appid="+ApiKey;
+
+        // Realiza la llamada a la API y manejar la respuesta conviertiendolo en un JSON
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+        // Convier la respuesta JSON a un objeto WeatherData
+        ObjectMapper objectMapper = new ObjectMapper();
+        ForecastData forecastData = null;
+        try {
+            forecastData = objectMapper.readValue(response.getBody(), ForecastData.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        return forecastData;
     }
 }

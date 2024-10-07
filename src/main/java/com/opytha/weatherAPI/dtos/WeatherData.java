@@ -7,7 +7,7 @@ import lombok.*;
 public class WeatherData {
     private long id;
     private String name;
-    private long cod;
+    private int cod;
     private long timezone;
     private Coord coord;
     private WeatherElement[] weather;
