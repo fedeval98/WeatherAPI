@@ -56,6 +56,7 @@ public class WeatherServiceImplementation implements WeatherService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+
         return forecastData;
     }
 }
