@@ -1,5 +1,6 @@
 package com.opytha.weatherAPI.controllers;
 
+import com.opytha.weatherAPI.dtos.AirPollutioNData;
 import com.opytha.weatherAPI.dtos.ForecastData;
 import com.opytha.weatherAPI.dtos.GeocodeData;
 import com.opytha.weatherAPI.dtos.WeatherData;
@@ -57,6 +58,19 @@ public class WeatherController {
         }
 
         return ResponseEntity.ok().eTag(eTag).body(geolocationData);
+    }
+
+    @GetMapping("/pollution/{cityName}")
+    public ResponseEntity<AirPollutioNData> getPollutionByCityName(@PathVariable String cityName,
+                                                                      @RequestHeader(value = HttpHeaders.IF_NONE_MATCH, required = false)String ifNoneMatch) {
+        AirPollutioNData airPollutioNData = weatherService.getPollutionByCityName(cityName);
+
+        String eTag = generateETag(airPollutioNData);
+        if(ifNoneMatch != null && ifNoneMatch.equals(eTag)){
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).eTag(eTag).build();
+        }
+
+        return ResponseEntity.ok().eTag(eTag).body(airPollutioNData);
     }
 
 }

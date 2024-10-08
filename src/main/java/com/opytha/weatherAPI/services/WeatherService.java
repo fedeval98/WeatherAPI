@@ -1,5 +1,6 @@
 package com.opytha.weatherAPI.services;
 
+import com.opytha.weatherAPI.dtos.AirPollutioNData;
 import com.opytha.weatherAPI.dtos.ForecastData;
 import com.opytha.weatherAPI.dtos.GeocodeData;
 import com.opytha.weatherAPI.dtos.WeatherData;
@@ -10,4 +11,5 @@ public interface WeatherService {
     WeatherData getWeatherByCityName(String cityName);
     ForecastData getForecastByCityName(String cityName);
     List<GeocodeData> getGeolocationByCityName(String cityName);
+    AirPollutioNData getPollutionByCityName(String cityName);
 }
