@@ -1,4 +1,4 @@
-package com.opytha.weatherAPI.Utils;
+package com.opytha.weatherAPI.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

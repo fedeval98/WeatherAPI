@@ -14,8 +14,4 @@ public class AppConfig {
         return new RestTemplate();
     }
 
-    @Bean
-    public Filter shallowEtagHeaderFilter(){
-        return new ShallowEtagHeaderFilter();
-    }
 }

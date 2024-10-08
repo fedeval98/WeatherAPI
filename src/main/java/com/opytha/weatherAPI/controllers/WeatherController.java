@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.opytha.weatherAPI.Utils.eTagGenerator.generateETag;
+import static com.opytha.weatherAPI.utils.eTagGenerator.generateETag;
 
 @RequestMapping("/api")
 @RestController
@@ -24,13 +24,14 @@ public class WeatherController {
 
     @GetMapping("/weather/{cityName}")
     public ResponseEntity<WeatherData> getWeatherByCityName(@PathVariable String cityName,
-                                                            @RequestHeader(value = HttpHeaders.IF_NONE_MATCH, required = false)String ifNoneMatch) {
+                                                            @RequestHeader(value = HttpHeaders.IF_NONE_MATCH, required = false)String ifNoneMatch){
         WeatherData weatherData = weatherService.getWeatherByCityName(cityName);
 
         String eTag = generateETag(weatherData);
         if(ifNoneMatch != null && ifNoneMatch.equals(eTag)){
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).eTag(eTag).build();
         }
+
         return ResponseEntity.ok().eTag(eTag).body(weatherData);
     }
 
