@@ -8,6 +8,7 @@ import com.opytha.weatherAPI.dtos.WeatherData;
 import com.opytha.weatherAPI.services.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -24,6 +25,7 @@ public class WeatherServiceImplementation implements WeatherService {
     private String ApiKey;
 
     @Override
+    @Cacheable(value = "weatherCache", key = "#cityName")
     public WeatherData getWeatherByCityName(String cityName) {
         // Construyo la URL de la API de OpenWeatherMap con el nombre de la ciudad
         String url = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&units=metric" + "&lang=es" + "&appid="+ApiKey;
@@ -44,6 +46,7 @@ public class WeatherServiceImplementation implements WeatherService {
     }
 
     @Override
+    @Cacheable(value = "forecastCache", key = "#cityName")
     public ForecastData getForecastByCityName(String cityName) {
         // Construyo la URL de la API de OpenWeatherMap con el nombre de la ciudad
         String url = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&units=metric" + "&lang=es" + "&appid="+ApiKey;
@@ -64,6 +67,7 @@ public class WeatherServiceImplementation implements WeatherService {
     }
 
     @Override
+    @Cacheable(value = "geolocationCache", key = "#cityName")
     public List<GeocodeData> getGeolocationByCityName(String cityName) {
         // Construyo la URL de la API de OpenWeatherMap con el nombre de la ciudad
         String url = "https://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=5" + "&units=metric" + "&lang=es" + "&appid="+ApiKey;

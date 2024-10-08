@@ -5,13 +5,14 @@ import com.opytha.weatherAPI.dtos.GeocodeData;
 import com.opytha.weatherAPI.dtos.WeatherData;
 import com.opytha.weatherAPI.services.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.opytha.weatherAPI.Utils.eTagGenerator.generateETag;
 
 @RequestMapping("/api")
 @RestController
@@ -21,21 +22,41 @@ public class WeatherController {
     private WeatherService weatherService;
 
     @GetMapping("/weather/{cityName}")
-    public ResponseEntity<WeatherData> getWeatherByCityName(@PathVariable String cityName) {
+    public ResponseEntity<WeatherData> getWeatherByCityName(@PathVariable String cityName,
+                                                            @RequestHeader(value = HttpHeaders.IF_NONE_MATCH, required = false)String ifNoneMatch) {
         WeatherData weatherData = weatherService.getWeatherByCityName(cityName);
-        return ResponseEntity.ok(weatherData);
+
+        String eTag = generateETag(weatherData);
+        if(ifNoneMatch != null && ifNoneMatch.equals(eTag)){
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).eTag(eTag).build();
+        }
+        return ResponseEntity.ok().eTag(eTag).body(weatherData);
     }
 
     @GetMapping("/forecast/{cityName}")
-    public ResponseEntity<ForecastData> getWeather5daysByCityName(@PathVariable String cityName) {
+    public ResponseEntity<ForecastData> getWeather5daysByCityName(@PathVariable String cityName,
+                                                                  @RequestHeader(value = HttpHeaders.IF_NONE_MATCH, required = false)String ifNoneMatch) {
         ForecastData forecastData = weatherService.getForecastByCityName(cityName);
-        return ResponseEntity.ok(forecastData);
+
+        String eTag = generateETag(forecastData);
+        if(ifNoneMatch != null && ifNoneMatch.equals(eTag)){
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).eTag(eTag).build();
+        }
+
+        return ResponseEntity.ok().eTag(eTag).body(forecastData);
     }
 
     @GetMapping("/geo/{cityName}")
-    public ResponseEntity<List<GeocodeData>> getGeolocationByCityName(@PathVariable String cityName) {
+    public ResponseEntity<List<GeocodeData>> getGeolocationByCityName(@PathVariable String cityName,
+                                                                      @RequestHeader(value = HttpHeaders.IF_NONE_MATCH, required = false)String ifNoneMatch) {
         List<GeocodeData> geolocationData = weatherService.getGeolocationByCityName(cityName);
-        return ResponseEntity.ok(geolocationData);
+
+        String eTag = generateETag(geolocationData);
+        if(ifNoneMatch != null && ifNoneMatch.equals(eTag)){
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).eTag(eTag).build();
+        }
+
+        return ResponseEntity.ok().eTag(eTag).body(geolocationData);
     }
 
 }
