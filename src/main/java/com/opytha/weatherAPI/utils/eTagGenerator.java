@@ -1,6 +1,7 @@
 package com.opytha.weatherAPI.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.nio.charset.StandardCharsets;
@@ -10,8 +11,13 @@ import java.security.NoSuchAlgorithmException;
 public class eTagGenerator {
     public static <T> String generateETag(T data) {
         try {
-            // Convierte el objeto Data a JSON
+
             ObjectMapper objectMapper = new ObjectMapper();
+
+            // Configura el ObjectMapper para serializar los campos en orden alfabetico
+            objectMapper.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
+
+            // Convierte el objeto Data a JSON
             String jsonData = objectMapper.writeValueAsString(data);
 
             // Calcula el hash SHA-256

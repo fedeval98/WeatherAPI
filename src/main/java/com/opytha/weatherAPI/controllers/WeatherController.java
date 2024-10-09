@@ -6,6 +6,7 @@ import com.opytha.weatherAPI.dtos.GeocodeData;
 import com.opytha.weatherAPI.dtos.WeatherData;
 import com.opytha.weatherAPI.services.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class WeatherController {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).eTag(eTag).build();
         }
 
-        return ResponseEntity.ok().eTag(eTag).body(weatherData);
+        return ResponseEntity.ok().cacheControl(CacheControl.noCache()).eTag(eTag).body(weatherData);
     }
 
     @GetMapping("/forecast/{cityName}")
@@ -45,7 +46,7 @@ public class WeatherController {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).eTag(eTag).build();
         }
 
-        return ResponseEntity.ok().eTag(eTag).body(forecastData);
+        return ResponseEntity.ok().cacheControl(CacheControl.noCache()).eTag(eTag).body(forecastData);
     }
 
     @GetMapping("/geo/{cityName}")
@@ -58,7 +59,7 @@ public class WeatherController {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).eTag(eTag).build();
         }
 
-        return ResponseEntity.ok().eTag(eTag).body(geolocationData);
+        return ResponseEntity.ok().cacheControl(CacheControl.noCache()).eTag(eTag).body(geolocationData);
     }
 
     @GetMapping("/pollution/{cityName}")
@@ -71,7 +72,7 @@ public class WeatherController {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).eTag(eTag).build();
         }
 
-        return ResponseEntity.ok().eTag(eTag).body(airPollutioNData);
+        return ResponseEntity.ok().cacheControl(CacheControl.noCache()).eTag(eTag).body(airPollutioNData);
     }
 
 }
