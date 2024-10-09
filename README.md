@@ -1,7 +1,7 @@
 # WeatherAPI
 
 ## Descripción
-Esta API proporciona información sobre el clima, consumiendo datos de la API de OpenWeather. El objetivo es ofrecer datos climáticos de manera eficiente, implementando un sistema de **cache** para reducir la cantidad de llamadas a la API de OpenWeather, utilizando **ETags** para manejar la validación de los datos almacenados en cache.
+Esta API proporciona información sobre el clima, consumiendo datos de la API de OpenWeather. El objetivo es ofrecer datos climáticos de manera eficiente, implementando un sistema de **cache** para reducir la cantidad de llamadas a la API de OpenWeather, utilizando **ETags** para manejar la validación de los datos almacenados en cache y un limitador de peticiones de 100 por hora. Tambien se utiliza Swagger para realizar una documentacion de los endpoints y su respuesta.
 
 ## Tecnologías
 
@@ -17,6 +17,7 @@ Esta API proporciona información sobre el clima, consumiendo datos de la API de
 - **PostgreSQL:** Base de datos para almacenar los datos de cache y otros recursos.
 - **JWT (JSON Web Token):** Para la autenticación y manejo de sesiones seguras.
 - **Lombok:** Para reducir el código boilerplate (getters, setters, constructores, etc).
+- **Swagger:** Para documentar los endpoints y sus respuestas.
 
 ## API externa
 
@@ -47,6 +48,12 @@ La API consume datos de OpenWeather:
 ## Uso
 
 - La API permite consultar el clima de diferentes ubicaciones. Los datos se almacenan en caché, y se usan ETags para validar la frescura de los mismos antes de hacer nuevas llamadas a la API de OpenWeather.
+
+### Endpoints
+
+- **/api/weather/cityname** -> Devuelve el clima actual de la ciudad buscada. ejemplo: /api/weather/London
+- **/api/forecast/cityname** -> Devuelve el clima de los proximos 5 dias de la ciudad buscada. ejemplo: /api/forecast/London
+- **api/pollution/cityname** -> Devuelve la polucion del aire de la ciudad buscada. ejemplo: /api/pollution/London
 
 ## Configuración
 
