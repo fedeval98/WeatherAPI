@@ -53,7 +53,7 @@ La API consume datos de OpenWeather:
 
 - **/api/weather/cityname** -> Devuelve el clima actual de la ciudad buscada. ejemplo: /api/weather/London
 - **/api/forecast/cityname** -> Devuelve el clima de los proximos 5 dias de la ciudad buscada. ejemplo: /api/forecast/London
-- **api/pollution/cityname** -> Devuelve la polucion del aire de la ciudad buscada. ejemplo: /api/pollution/London
+- **/api/pollution/cityname** -> Devuelve la polucion del aire de la ciudad buscada. ejemplo: /api/pollution/London
 
 ## Configuración
 
