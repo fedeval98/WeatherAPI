@@ -29,7 +29,7 @@ La API consume datos de OpenWeather:
 
 1. Clona este repositorio:
     ```bash
-    git clone https://github.com/tu-usuario/weather-api.git
+    git clone https://github.com/fedeval98/WeatherAPI.git
     ```
 
 2. Dirígete al directorio del proyecto:
