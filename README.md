@@ -80,6 +80,61 @@ openweather.api.key=${API_KEY}
 ## Seguridad
 Este proyecto usa JWT para la autenticación. Para generar y validar tokens, configura los parámetros de seguridad en tu archivo de propiedades.
 
+## Seguridad
+Este proyecto utiliza JWT (JSON Web Token) para la autenticación y autorización de los usuarios. A continuación, se describe cómo se generan y manejan los tokens en la aplicación:
+
+### Flujo de Autenticación
+
+1. **Login**: Cuando un usuario se autentica en la API mediante el endpoint `/api/login`, se envían las credenciales (email y contraseña). Si las credenciales son válidas, se genera un token JWT.
+
+   - **Generación del Token**:
+      - Se utiliza la clase `JwtService` para crear el token. Esta clase tiene un método `generateToken(UserDetails userDetails)` que toma como parámetro el objeto `UserDetails` del usuario autenticado.
+      - El token contiene la información del usuario y su rol, y tiene una duración de una hora.
+
+2. **Uso del Token**:
+   - El token se debe incluir en el encabezado de autorización de las solicitudes a los endpoints protegidos de la API, utilizando el esquema "Bearer". Por ejemplo:
+     ```
+     Authorization: Bearer <token>
+     ```
+
+3. **Validación del Token**:
+   - La clase `JwtRequestFilter` intercepta las solicitudes entrantes y verifica la validez del token JWT. Si el token es válido y no ha expirado, se extrae el nombre de usuario del token y se establece la autenticación en el contexto de seguridad de Spring.
+
+4. **Manejo de Errores**:
+   - Si el token es inválido o ha expirado, el acceso a los endpoints protegidos será denegado. Se define un `CustomAuthenticationEntryPoint` para manejar los errores de autenticación y enviar respuestas adecuadas al cliente.
+
+5. **Roles y Permisos**:
+   - Los roles de los usuarios se gestionan en la clase `UserDetailService`, que asigna roles a los usuarios en función de los datos de la base de datos. Al generar el token, también se incluye el rol en los reclamos del token.
+
+### Ejemplo de Generación de Token
+Al realizar una autenticación exitosa, se devuelve una respuesta JSON que incluye el token:
+
+```java
+@RestController
+@RequestMapping("/api")
+public class AuthController {
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtService jwtService;
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
+        );
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String jwt = jwtService.generateToken(userDetails);
+        
+        return ResponseEntity.ok(new AuthResponse(jwt));
+    }
+}
+```
+### Configuración de Seguridad
+Asegúrate de que la configuración de seguridad en SecurityConfig permita el acceso al endpoint /api/login sin autenticación, mientras que otros endpoints requieren un token válido para acceder.
+
 ## [Plan futuro](https://shadow-parka-4f4.notion.site/11b2ea608eb280dcb383e455f6923516?v=11b2ea608eb2815b9721000c816d7509)
 - Mejorar el sistema de cache.
 - Agregar endpoints para nuevas funcionalidades como alertas meteorológicas.
