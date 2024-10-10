@@ -1,4 +1,4 @@
-package com.opytha.weatherAPI.dtos;
+package com.opytha.weatherAPI.dtos.openweather;
 
 import lombok.Data;
 

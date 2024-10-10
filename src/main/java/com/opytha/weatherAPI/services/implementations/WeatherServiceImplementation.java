@@ -2,10 +2,10 @@ package com.opytha.weatherAPI.services.implementations;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.opytha.weatherAPI.dtos.AirPollutioNData;
-import com.opytha.weatherAPI.dtos.ForecastData;
-import com.opytha.weatherAPI.dtos.GeocodeData;
-import com.opytha.weatherAPI.dtos.WeatherData;
+import com.opytha.weatherAPI.dtos.openweather.AirPollutioNData;
+import com.opytha.weatherAPI.dtos.openweather.ForecastData;
+import com.opytha.weatherAPI.dtos.openweather.GeocodeData;
+import com.opytha.weatherAPI.dtos.openweather.WeatherData;
 import com.opytha.weatherAPI.services.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

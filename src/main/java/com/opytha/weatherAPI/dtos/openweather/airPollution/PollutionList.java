@@ -1,4 +1,4 @@
-package com.opytha.weatherAPI.dtos.airPollution;
+package com.opytha.weatherAPI.dtos.openweather.airPollution;
 
 import lombok.Data;
 

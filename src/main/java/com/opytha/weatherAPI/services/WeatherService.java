@@ -1,9 +1,9 @@
 package com.opytha.weatherAPI.services;
 
-import com.opytha.weatherAPI.dtos.AirPollutioNData;
-import com.opytha.weatherAPI.dtos.ForecastData;
-import com.opytha.weatherAPI.dtos.GeocodeData;
-import com.opytha.weatherAPI.dtos.WeatherData;
+import com.opytha.weatherAPI.dtos.openweather.AirPollutioNData;
+import com.opytha.weatherAPI.dtos.openweather.ForecastData;
+import com.opytha.weatherAPI.dtos.openweather.GeocodeData;
+import com.opytha.weatherAPI.dtos.openweather.WeatherData;
 
 import java.util.List;
 
