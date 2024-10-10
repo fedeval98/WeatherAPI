@@ -80,7 +80,7 @@ openweather.api.key=${API_KEY}
 ## Seguridad
 Este proyecto usa JWT para la autenticación. Para generar y validar tokens, configura los parámetros de seguridad en tu archivo de propiedades.
 
-## [Plan futuro](https://www.notion.so/11b2ea608eb280dcb383e455f6923516?v=11b2ea608eb2815b9721000c816d7509&pvs=4)
+## [Plan futuro](https://shadow-parka-4f4.notion.site/11b2ea608eb280dcb383e455f6923516?v=11b2ea608eb2815b9721000c816d7509)
 - Mejorar el sistema de cache.
 - Agregar endpoints para nuevas funcionalidades como alertas meteorológicas.
 - Mejorar la seguridad con OAuth 2.0.
