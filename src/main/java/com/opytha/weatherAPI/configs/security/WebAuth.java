@@ -1,4 +1,4 @@
-package com.opytha.weatherAPI.configs;
+package com.opytha.weatherAPI.configs.security;
 
 import com.opytha.weatherAPI.models.Client;
 import com.opytha.weatherAPI.repositories.ClientRepository;
