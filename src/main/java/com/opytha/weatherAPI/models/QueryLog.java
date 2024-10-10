@@ -4,12 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class QueryLog {
 
@@ -23,6 +23,10 @@ public class QueryLog {
 
     private String query;
 
-    private LocalDate timeStamp;
+    private LocalDateTime timeStamp;
 
+    public QueryLog(String query, LocalDateTime timeStamp) {
+        this.query = query;
+        this.timeStamp = timeStamp;
+    }
 }

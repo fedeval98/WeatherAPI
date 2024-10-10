@@ -6,14 +6,22 @@ import com.opytha.weatherAPI.dtos.openweather.AirPollutioNData;
 import com.opytha.weatherAPI.dtos.openweather.ForecastData;
 import com.opytha.weatherAPI.dtos.openweather.GeocodeData;
 import com.opytha.weatherAPI.dtos.openweather.WeatherData;
+import com.opytha.weatherAPI.models.Client;
+import com.opytha.weatherAPI.models.QueryLog;
+import com.opytha.weatherAPI.services.ClientService;
 import com.opytha.weatherAPI.services.WeatherService;
+import com.opytha.weatherAPI.utils.exceptions.AuthException;
+import com.opytha.weatherAPI.utils.exceptions.GeolocationException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -22,12 +30,23 @@ public class WeatherServiceImplementation implements WeatherService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private ClientService clientService;
+
     @Value("${API_KEY}")
     private String ApiKey;
 
     @Override
     @Cacheable(value = "weatherCache", key = "#cityName")
-    public WeatherData getWeatherByCityName(String cityName) {
+    @Transactional
+    public WeatherData getWeatherByCityName(String cityName, String email) {
+
+        Client clientAuth = clientService.getAuthClient(email);
+
+        if(clientAuth == null){
+            throw new AuthException("Usuario no autenticado");
+        }
+
         // Construyo la URL de la API de OpenWeatherMap con el nombre de la ciudad
         String url =    "https://api.openweathermap.org/data/2.5/weather?q=" + cityName +
                         "&units=metric" +
@@ -46,12 +65,26 @@ public class WeatherServiceImplementation implements WeatherService {
             throw new RuntimeException(e);
         }
 
+        QueryLog query = new QueryLog("Clima actual de: "+cityName, LocalDateTime.now());
+
+        clientAuth.addQueryLog(query);
+
+        clientService.saveClient(clientAuth);
+
         return weatherData;
     }
 
     @Override
     @Cacheable(value = "forecastCache", key = "#cityName")
-    public ForecastData getForecastByCityName(String cityName) {
+    @Transactional
+    public ForecastData getForecastByCityName(String cityName, String email) {
+
+        Client clientAuth = clientService.getAuthClient(email);
+
+        if(clientAuth == null){
+            throw new AuthException("Usuario no autenticado");
+        }
+
         // Construyo la URL de la API de OpenWeatherMap con el nombre de la ciudad
         String url =    "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName +
                         "&units=metric" +
@@ -70,12 +103,25 @@ public class WeatherServiceImplementation implements WeatherService {
             throw new RuntimeException(e);
         }
 
+        QueryLog query = new QueryLog("Pronostico de: "+cityName, LocalDateTime.now());
+
+        clientAuth.addQueryLog(query);
+
+        clientService.saveClient(clientAuth);
+
         return forecastData;
     }
 
     @Override
     @Cacheable(value = "geolocationCache", key = "#cityName")
-    public List<GeocodeData> getGeolocationByCityName(String cityName) {
+    @Transactional
+    public List<GeocodeData> getGeolocationByCityName(String cityName, String email) {
+
+        Client clientAuth = clientService.getAuthClient(email);
+
+        if(clientAuth == null){
+            throw new AuthException("Usuario no autenticado");
+        }
 
         String url =    "https://api.openweathermap.org/geo/1.0/direct?q=" + cityName +
                         "&limit=5" +
@@ -94,20 +140,34 @@ public class WeatherServiceImplementation implements WeatherService {
             throw new RuntimeException(e);
         }
 
+        QueryLog query = new QueryLog("Geolocacion de: "+cityName, LocalDateTime.now());
+
+        clientAuth.addQueryLog(query);
+
+        clientService.saveClient(clientAuth);
+
         return geolocationData;
     }
 
     @Override
     @Cacheable(value = "airPollutionCache", key = "#cityName")
-    public AirPollutioNData getPollutionByCityName(String cityName) {
-        List<GeocodeData> geolocationData = getGeolocationByCityName(cityName);
+    @Transactional
+    public AirPollutioNData getPollutionByCityName(String cityName, String email) {
 
-        if (geolocationData == null || geolocationData.isEmpty()) {
-            throw new RuntimeException("No se encontró geolocalización para la ciudad: " + cityName);
+        Client clientAuth = clientService.getAuthClient(email);
+
+        if(clientAuth == null){
+            throw new AuthException("Usuario no autenticado");
         }
 
-        double lat = geolocationData.get(0).getLat();
-        double lon = geolocationData.get(0).getLon();
+        List<GeocodeData> geolocationData = getGeolocationByCityName(cityName, email);
+
+        if (geolocationData == null || geolocationData.isEmpty()) {
+            throw new GeolocationException("No se encontró geolocalización para la ciudad: " + cityName);
+        }
+
+        double lat = geolocationData.getFirst().getLat();
+        double lon = geolocationData.getFirst().getLon();
 
         String url =    "https://api.openweathermap.org/data/2.5/air_pollution?lat="+lat +
                         "&lon="+ lon +
@@ -125,6 +185,13 @@ public class WeatherServiceImplementation implements WeatherService {
             throw new RuntimeException(e);
         }
 
+        QueryLog query = new QueryLog("Contaminacion del aire de: "+cityName, LocalDateTime.now());
+
+        clientAuth.addQueryLog(query);
+
+        clientService.saveClient(clientAuth);
+
         return pollutioNData;
     }
+
 }

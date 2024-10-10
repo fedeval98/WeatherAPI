@@ -9,20 +9,20 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 import static com.opytha.weatherAPI.utils.eTagGenerator.generateETag;
 
-@RequestMapping("/api")
 @RestController
+@RequestMapping("/api")
 public class WeatherController {
 
     @Autowired
@@ -42,8 +42,9 @@ public class WeatherController {
     )
     @GetMapping("/weather/{cityName}")
     public ResponseEntity<WeatherData> getWeatherByCityName(@PathVariable String cityName,
-                                                            @RequestHeader(value = HttpHeaders.IF_NONE_MATCH, required = false)String ifNoneMatch){
-        WeatherData weatherData = weatherService.getWeatherByCityName(cityName);
+                                                            @RequestHeader(value = HttpHeaders.IF_NONE_MATCH, required = false)String ifNoneMatch,
+                                                            Authentication authentication){
+        WeatherData weatherData = weatherService.getWeatherByCityName(cityName,authentication.getName());
 
         String eTag = generateETag(weatherData);
         if(ifNoneMatch != null && ifNoneMatch.equals(eTag)){
@@ -66,8 +67,9 @@ public class WeatherController {
     )
     @GetMapping("/forecast/{cityName}")
     public ResponseEntity<ForecastData> getWeather5daysByCityName(@PathVariable String cityName,
-                                                                  @RequestHeader(value = HttpHeaders.IF_NONE_MATCH, required = false)String ifNoneMatch) {
-        ForecastData forecastData = weatherService.getForecastByCityName(cityName);
+                                                                  @RequestHeader(value = HttpHeaders.IF_NONE_MATCH, required = false)String ifNoneMatch,
+                                                                  Authentication authentication) {
+        ForecastData forecastData = weatherService.getForecastByCityName(cityName,authentication.getName());
 
         String eTag = generateETag(forecastData);
         if(ifNoneMatch != null && ifNoneMatch.equals(eTag)){
@@ -90,8 +92,9 @@ public class WeatherController {
     )
     @GetMapping("/geo/{cityName}")
     public ResponseEntity<List<GeocodeData>> getGeolocationByCityName(@PathVariable String cityName,
-                                                                      @RequestHeader(value = HttpHeaders.IF_NONE_MATCH, required = false)String ifNoneMatch) {
-        List<GeocodeData> geolocationData = weatherService.getGeolocationByCityName(cityName);
+                                                                      @RequestHeader(value = HttpHeaders.IF_NONE_MATCH, required = false)String ifNoneMatch,
+                                                                      Authentication authentication) {
+        List<GeocodeData> geolocationData = weatherService.getGeolocationByCityName(cityName,authentication.getName());
 
         String eTag = generateETag(geolocationData);
         if(ifNoneMatch != null && ifNoneMatch.equals(eTag)){
@@ -114,8 +117,9 @@ public class WeatherController {
     )
     @GetMapping("/pollution/{cityName}")
     public ResponseEntity<AirPollutioNData> getPollutionByCityName(@PathVariable String cityName,
-                                                                      @RequestHeader(value = HttpHeaders.IF_NONE_MATCH, required = false)String ifNoneMatch) {
-        AirPollutioNData airPollutioNData = weatherService.getPollutionByCityName(cityName);
+                                                                   @RequestHeader(value = HttpHeaders.IF_NONE_MATCH, required = false)String ifNoneMatch,
+                                                                   Authentication authentication) {
+        AirPollutioNData airPollutioNData = weatherService.getPollutionByCityName(cityName,authentication.getName());
 
         String eTag = generateETag(airPollutioNData);
         if(ifNoneMatch != null && ifNoneMatch.equals(eTag)){

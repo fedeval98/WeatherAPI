@@ -26,7 +26,7 @@ public class Client {
     private Roles rol = Roles.CLIENT;
 
     @Setter(AccessLevel.NONE)
-    @OneToMany (mappedBy = "client", fetch = FetchType.EAGER)
+    @OneToMany (mappedBy = "client", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<QueryLog> queryLog = new ArrayList<>();
 
     public Client(String firstName, String lastName, String email, String password) {
@@ -34,5 +34,10 @@ public class Client {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+    }
+
+    public void addQueryLog (QueryLog queryLog){
+        queryLog.setClient(this);
+        this.queryLog.add(queryLog);
     }
 }

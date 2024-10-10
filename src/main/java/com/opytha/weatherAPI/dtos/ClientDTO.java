@@ -14,7 +14,7 @@ public class ClientDTO {
 
     private String firstName,lastName,email;
     private Roles rol;
-    private List<QueryLog> queryLog;
+    private List<QueryLogDTO> queryLog;
 
     public ClientDTO(Client client) {
         id = client.getId();
@@ -22,7 +22,6 @@ public class ClientDTO {
         lastName = client.getLastName();
         email = client.getEmail();
         rol = client.getRol();
-        queryLog = client.getQueryLog();
+        queryLog = client.getQueryLog().stream().map(QueryLogDTO::new).collect(Collectors.toList()).reversed();
     }
-
 }

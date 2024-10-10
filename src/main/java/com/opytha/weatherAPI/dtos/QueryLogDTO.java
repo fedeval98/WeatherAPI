@@ -4,6 +4,7 @@ import com.opytha.weatherAPI.models.QueryLog;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 public class QueryLogDTO {
@@ -12,7 +13,7 @@ public class QueryLogDTO {
 
     private String query;
 
-    private LocalDate timeStamp;
+    private LocalDateTime timeStamp;
 
     public QueryLogDTO (QueryLog queryLog) {
         id = queryLog.getId();
