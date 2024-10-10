@@ -21,7 +21,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
         http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/login","logout").permitAll()
+                .requestMatchers("/login","logout","/swagger-ui/**","/v3/api-docs/**","/swagger-ui.html").permitAll()
                 .requestMatchers("/api/weather/{cityName}","/api/forecast/{cityName}","/api/pollution/{cityName}").authenticated()
                 .anyRequest().denyAll());
 

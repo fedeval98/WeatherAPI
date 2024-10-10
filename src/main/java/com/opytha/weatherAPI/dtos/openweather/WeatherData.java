@@ -1,6 +1,6 @@
-package com.opytha.weatherAPI.dtos;
+package com.opytha.weatherAPI.dtos.openweather;
 
-import com.opytha.weatherAPI.dtos.weather.*;
+import com.opytha.weatherAPI.dtos.openweather.weather.*;
 import lombok.*;
 
 @Data

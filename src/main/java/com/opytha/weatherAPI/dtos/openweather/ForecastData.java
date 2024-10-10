@@ -1,8 +1,6 @@
-package com.opytha.weatherAPI.dtos;
+package com.opytha.weatherAPI.dtos.openweather;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.opytha.weatherAPI.dtos.forecast.*;
-import com.opytha.weatherAPI.dtos.weather.*;
+import com.opytha.weatherAPI.dtos.openweather.forecast.*;
 import lombok.Data;
 
 import java.util.List;
