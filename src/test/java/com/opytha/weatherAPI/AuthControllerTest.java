@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opytha.weatherAPI.dtos.jwt.AuthRequest;
 import com.opytha.weatherAPI.models.Client;
 import com.opytha.weatherAPI.repositories.ClientRepository;
-import com.opytha.weatherAPI.controllers.AuthController; // Asegúrate de que esta es tu clase de controlador
+import com.opytha.weatherAPI.controllers.AuthController;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ public class AuthControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private ClientRepository clientRepository; // Para crear usuarios de prueba
+    private ClientRepository clientRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -43,14 +43,14 @@ public class AuthControllerTest {
     @Test
     @Transactional
     public void testLogin() throws Exception {
-        // Suponiendo que tienes un objeto con las credenciales
+        // Objeto que recibe los datos de login
         AuthRequest loginRequest = new AuthRequest("fede@val.com", "fedeval");
 
         mockMvc.perform(post("/api/login")  // Cambia esta ruta por tu endpoint de login
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.jwt").exists());  // Asegúrate de que la respuesta tenga un campo "token"
+                .andExpect(jsonPath("$.jwt").exists());
     }
 
     @Test
