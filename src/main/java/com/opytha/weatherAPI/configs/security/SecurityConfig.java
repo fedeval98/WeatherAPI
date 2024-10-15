@@ -42,7 +42,7 @@ public class SecurityConfig {
                 exceptionHandling.authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
 
         http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(HttpMethod.POST,"/api/login").permitAll()
+                .requestMatchers(HttpMethod.POST,"/api/login", "/api/register").permitAll()
                 .requestMatchers("/swagger-ui/**","/v3/api-docs/**","/swagger-ui.html").permitAll()
                 .requestMatchers("/api/weather/{cityName}","/api/forecast/{cityName}","/api/pollution/{cityName}","/api/clients").authenticated()
                 .anyRequest().denyAll());

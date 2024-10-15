@@ -10,13 +10,11 @@ import com.opytha.weatherAPI.models.Client;
 import com.opytha.weatherAPI.models.QueryLog;
 import com.opytha.weatherAPI.services.ClientService;
 import com.opytha.weatherAPI.services.WeatherService;
-import com.opytha.weatherAPI.utils.exceptions.AuthException;
-import com.opytha.weatherAPI.utils.exceptions.GeolocationException;
+import com.opytha.weatherAPI.utils.exceptions.BadRequestException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -44,7 +42,7 @@ public class WeatherServiceImplementation implements WeatherService {
         Client clientAuth = clientService.getAuthClient(email);
 
         if(clientAuth == null){
-            throw new AuthException("Usuario no autenticado");
+            throw new BadRequestException("Usuario no autenticado");
         }
 
         // Construyo la URL de la API de OpenWeatherMap con el nombre de la ciudad
@@ -82,7 +80,7 @@ public class WeatherServiceImplementation implements WeatherService {
         Client clientAuth = clientService.getAuthClient(email);
 
         if(clientAuth == null){
-            throw new AuthException("Usuario no autenticado");
+            throw new BadRequestException("Usuario no autenticado");
         }
 
         // Construyo la URL de la API de OpenWeatherMap con el nombre de la ciudad
@@ -120,7 +118,7 @@ public class WeatherServiceImplementation implements WeatherService {
         Client clientAuth = clientService.getAuthClient(email);
 
         if(clientAuth == null){
-            throw new AuthException("Usuario no autenticado");
+            throw new BadRequestException("Usuario no autenticado");
         }
 
         String url =    "https://api.openweathermap.org/geo/1.0/direct?q=" + cityName +
@@ -157,13 +155,13 @@ public class WeatherServiceImplementation implements WeatherService {
         Client clientAuth = clientService.getAuthClient(email);
 
         if(clientAuth == null){
-            throw new AuthException("Usuario no autenticado");
+            throw new BadRequestException("Usuario no autenticado");
         }
 
         List<GeocodeData> geolocationData = getGeolocationByCityName(cityName, email);
 
         if (geolocationData == null || geolocationData.isEmpty()) {
-            throw new GeolocationException("No se encontró geolocalización para la ciudad: " + cityName);
+            throw new BadRequestException("No se encontró geolocalización para la ciudad: " + cityName);
         }
 
         double lat = geolocationData.getFirst().getLat();
