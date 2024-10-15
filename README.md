@@ -55,6 +55,7 @@ La API consume datos de OpenWeather:
 - **/api/forecast/cityname** -> Devuelve el clima de los proximos 5 dias de la ciudad buscada. ejemplo: /api/forecast/London
 - **/api/pollution/cityname** -> Devuelve la polucion del aire de la ciudad buscada. ejemplo: /api/pollution/London
 - **/swagger-ui/index.html** -> Accede a la documentacion de Swagger.
+- **/api/register** -> Endpoint para la creacion de usuario mediante el envio de un body JSON al servidor.
 
 ## Configuración
 
