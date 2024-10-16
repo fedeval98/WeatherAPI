@@ -1,114 +1,114 @@
 # WeatherAPI
 
-## Descripción
-Esta API proporciona información sobre el clima, consumiendo datos de la API de OpenWeather. El objetivo es ofrecer datos climáticos de manera eficiente, implementando un sistema de **cache** para reducir la cantidad de llamadas a la API de OpenWeather, utilizando **ETags** para manejar la validación de los datos almacenados en cache y un limitador de peticiones de 100 por hora. Tambien se utiliza Swagger para realizar una documentacion de los endpoints y su respuesta.
+## Description
+This API provides weather information by consuming data from the OpenWeather API. The goal is to offer weather data efficiently by implementing a caching system to reduce the number of calls to the OpenWeather API, using **ETags** to handle the validation of cached data, and a rate limiter of 100 requests per hour. Swagger is also used to document the endpoints and their responses.
 
-## Tecnologías
+## Technologies
 
-- **Lenguaje:** Java 23
+- **Language:** Java 23
 - **Framework:** Spring Boot 3.3.4
 - **Project Manager:** Maven
 
-## Dependencias
+## Dependencies
 
-- **Spring Web:** Para manejar las peticiones HTTP y crear la API REST.
-- **Spring Security:** Para la autenticación y autorización.
-- **Spring Data JPA:** Para la integración con bases de datos utilizando JPA.
-- **PostgreSQL:** Base de datos para almacenar los datos de cache y otros recursos.
-- **JWT (JSON Web Token):** Para la autenticación y manejo de sesiones seguras.
-- **Lombok:** Para reducir el código boilerplate (getters, setters, constructores, etc).
-- **Swagger:** Para documentar los endpoints y sus respuestas.
+- **Spring Web:** To handle HTTP requests and create the REST API.
+- **Spring Security:** For authentication and authorization.
+- **Spring Data JPA:** For integration with databases using JPA.
+- **PostgreSQL:** Database to store cached data and other resources.
+- **JWT (JSON Web Token):** For secure authentication and session management.
+- **Lombok:** To reduce boilerplate code (getters, setters, constructors, etc.).
+- **Swagger:** To document the endpoints and their responses.
 
-## API externa
+## External API
 
-La API consume datos de OpenWeather:
+The API consumes data from OpenWeather:
 
-- **URL Base:** [OpenWeather API](https://openweathermap.org/api)
-- Se implementará un sistema de cache para optimizar las llamadas, almacenando la información y validándola con **ETags**.
+- **Base URL:** [OpenWeather API](https://openweathermap.org/api)
+- A caching system will be implemented to optimize calls by storing the information and validating it with **ETags**.
 
-## Instalación
+## Installation
 
-1. Clona este repositorio:
+1. Clone this repository:
     ```bash
     git clone https://github.com/fedeval98/WeatherAPI.git
     ```
 
-2. Dirígete al directorio del proyecto:
+2. Navigate to the project directory:
     ```bash
     cd weather-api
     ```
 
-3. Compila el proyecto con Maven:
+3. Build the project with Maven:
     ```bash
     mvn clean install
     ```
 
-4. Configura las variables de entorno o modifica el archivo `application.properties` para conectarte a tu base de datos PostgreSQL.
+4. Configure environment variables or modify the `application.properties` file to connect to your PostgreSQL database.
 
-## Uso
+## Usage
 
-- La API permite consultar el clima de diferentes ubicaciones. Los datos se almacenan en caché, y se usan ETags para validar la frescura de los mismos antes de hacer nuevas llamadas a la API de OpenWeather.
+- The API allows querying the weather for different locations. Data is cached, and ETags are used to validate freshness before making new calls to the OpenWeather API.
 
 ### Endpoints
 
-- **/api/weather/cityname** -> Devuelve el clima actual de la ciudad buscada. ejemplo: /api/weather/London
-- **/api/forecast/cityname** -> Devuelve el clima de los proximos 5 dias de la ciudad buscada. ejemplo: /api/forecast/London
-- **/api/pollution/cityname** -> Devuelve la polucion del aire de la ciudad buscada. ejemplo: /api/pollution/London
-- **/swagger-ui/index.html** -> Accede a la documentacion de Swagger.
-- **/api/register** -> Endpoint para la creacion de usuario mediante el envio de un body JSON al servidor.
+- **/api/weather/cityname** -> Returns the current weather for the specified city. Example: /api/weather/London
+- **/api/forecast/cityname** -> Returns the weather forecast for the next 5 days for the specified city. Example: /api/forecast/London
+- **/api/pollution/cityname** -> Returns the air pollution data for the specified city. Example: /api/pollution/London
+- **/swagger-ui/index.html** -> Access the Swagger documentation.
+- **/api/register** -> Endpoint for user creation by sending a JSON body to the server.
 
-## Configuración
+## Configuration
 
-### Base de datos
+### Database
 
-Asegúrate de tener una instancia de PostgreSQL en ejecución. Configura la conexión en `application.properties`:
+Make sure you have a running instance of PostgreSQL. Configure the connection in `application.properties`:
 
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/weather_db
-spring.datasource.username=tu_usuario
-spring.datasource.password=tu_contraseña
+spring.datasource.username=your_username
+spring.datasource.password=your_password
 ```
 
-## API Key de OpenWeather
+## OpenWeather API Key
 
-Registra tu API Key en OpenWeather y agrégala en tu `application.properties`:
-- Crea una variable de entorno en el sistema o utiliza un archivo .env para guardar la API_KEY.
+Register your API Key with OpenWeather and add it to your `application.properties`:
+- Create an environment variable on your system or use a .env file to store the API_KEY.
 ```
 openweather.api.key=${API_KEY}
 ```
-- Recorda que tu API_KEY es una variable secreta, no la incluyas en tu repositorio.
+- Remember that your API_KEY is a secret variable; do not include it in your repository.
 
-## Seguridad
-Este proyecto usa JWT para la autenticación. Para generar y validar tokens, configura los parámetros de seguridad en tu archivo de propiedades.
+## Security
+This project uses JWT for authentication. To generate and validate tokens, configure the security parameters in your properties file.
 
-## Seguridad
-Este proyecto utiliza JWT (JSON Web Token) para la autenticación y autorización de los usuarios. A continuación, se describe cómo se generan y manejan los tokens en la aplicación:
+## Security
+This project uses JWT (JSON Web Token) for user authentication and authorization. The following describes how tokens are generated and handled in the application:
 
-### Flujo de Autenticación
+### Authentication Flow
 
-1. **Login**: Cuando un usuario se autentica en la API mediante el endpoint `/api/login`, se envían las credenciales (email y contraseña). Si las credenciales son válidas, se genera un token JWT.
+1. **Login**: When a user authenticates with the API via the `/api/login` endpoint, their credentials (email and password) are sent. If the credentials are valid, a JWT token is generated.
 
-   - **Generación del Token**:
-      - Se utiliza la clase `JwtService` para crear el token. Esta clase tiene un método `generateToken(UserDetails userDetails)` que toma como parámetro el objeto `UserDetails` del usuario autenticado.
-      - El token contiene la información del usuario y su rol, y tiene una duración de una hora.
+   - **Token Generation**:
+      - The `JwtService` class is used to create the token. This class has a method `generateToken(UserDetails userDetails)` that takes the authenticated `UserDetails` object as a parameter.
+      - The token contains user information and their role, and it has a duration of one hour.
 
-2. **Uso del Token**:
-   - El token se debe incluir en el encabezado de autorización de las solicitudes a los endpoints protegidos de la API, utilizando el esquema "Bearer". Por ejemplo:
+2. **Token Usage**:
+   - The token must be included in the authorization header of requests to protected API endpoints using the "Bearer" scheme. For example:
      ```
      Authorization: Bearer <token>
      ```
 
-3. **Validación del Token**:
-   - La clase `JwtRequestFilter` intercepta las solicitudes entrantes y verifica la validez del token JWT. Si el token es válido y no ha expirado, se extrae el nombre de usuario del token y se establece la autenticación en el contexto de seguridad de Spring.
+3. **Token Validation**:
+   - The `JwtRequestFilter` class intercepts incoming requests and verifies the validity of the JWT token. If the token is valid and has not expired, the username is extracted from the token, and the authentication is set in the Spring security context.
 
-4. **Manejo de Errores**:
-   - Si el token es inválido o ha expirado, el acceso a los endpoints protegidos será denegado. Se define un `CustomAuthenticationEntryPoint` para manejar los errores de autenticación y enviar respuestas adecuadas al cliente.
+4. **Error Handling**:
+   - If the token is invalid or has expired, access to the protected endpoints will be denied. A `CustomAuthenticationEntryPoint` is defined to handle authentication errors and send appropriate responses to the client.
 
-5. **Roles y Permisos**:
-   - Los roles de los usuarios se gestionan en la clase `UserDetailService`, que asigna roles a los usuarios en función de los datos de la base de datos. Al generar el token, también se incluye el rol en los reclamos del token.
+5. **Roles and Permissions**:
+   - User roles are managed in the `UserDetailService` class, which assigns roles to users based on data from the database. When generating the token, the role is also included in the token claims.
 
-### Ejemplo de Generación de Token
-Al realizar una autenticación exitosa, se devuelve una respuesta JSON que incluye el token:
+### Example of Token Generation
+Upon successful authentication, a JSON response is returned that includes the token:
 
 ```java
 @RestController
@@ -133,17 +133,18 @@ public class AuthController {
     }
 }
 ```
-### Configuración de Seguridad
-Asegúrate de que la configuración de seguridad en SecurityConfig permita el acceso al endpoint /api/login sin autenticación, mientras que otros endpoints requieren un token válido para acceder.
 
-## [Plan futuro](https://shadow-parka-4f4.notion.site/11b2ea608eb280dcb383e455f6923516?v=11b2ea608eb2815b9721000c816d7509)
-- Mejorar el sistema de cache.
-- Agregar endpoints para nuevas funcionalidades como alertas meteorológicas.
-- Mejorar la seguridad con OAuth 2.0.
-- Crear un front utilizando VUE.
+### Security Configuration
+Ensure that the security configuration in `SecurityConfig` allows access to the `/api/login` endpoint without authentication, while other endpoints require a valid token to access.
 
-## Contribuciones
-Las contribuciones son bienvenidas. Si deseas contribuir, por favor abre un Pull Request o crea un Issue.
+## [Future Plan](https://shadow-parka-4f4.notion.site/11b2ea608eb280dcb383e455f6923516?v=11b2ea608eb2815b9721000c816d7509)
+- Improve the caching system.
+- Add endpoints for new features such as weather alerts.
+- Enhance security with OAuth 2.0.
+- Create a front end using VUE.
 
-## Licencia
-Este proyecto está licenciado bajo la MIT License.
+## Contributions
+Contributions are welcome. If you would like to contribute, please open a Pull Request or create an Issue.
+
+## License
+This project is licensed under the MIT License.
