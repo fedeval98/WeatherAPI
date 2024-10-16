@@ -25,7 +25,7 @@ public class AppConfig {
                 .components(new Components()
                         .addResponses("NotModifiedResponse",
                                 new ApiResponse()
-                                        .description("El contenido no ha sido modificado, se reutiliza el eTag.")
+                                        .description("Content not modified. Re-utilizing E-Tag.")
                                         .content(new Content()
                                                 .addMediaType("application/json",
                                                         new MediaType()
@@ -36,12 +36,12 @@ public class AppConfig {
                         )
                         .addResponses("TooManyRequestsResponse",
                                 new ApiResponse()
-                                        .description("Se ha superado el límite de 100 peticiones por hora.")
+                                        .description("Limit of 100 requests per hour has been surpassed.")
                                         .content(new Content()
                                                 .addMediaType("application/json",
                                                         new MediaType()
                                                                 .schema(new Schema().type("string"))
-                                                                .example("{\"error\": \"Se ha superado el límite de 100 peticiones por hora.\"}")
+                                                                .example("{\"error\": \"Limit of 100 requests per hour has been surpassed.\"}")
                                                 )
                                         )
                         )
@@ -49,8 +49,9 @@ public class AppConfig {
                 .info(new Info()
                         .title("WeatherAPI")
                         .version("1.0")
-                        .description("Esta API proporciona información sobre el clima, consumiendo datos de la API de OpenWeather. " +
-                                "El objetivo es ofrecer datos climáticos de manera eficiente, implementando un sistema de cache para reducir la cantidad de llamadas a la API de OpenWeather, utilizando ETags para manejar la validación de los datos almacenados en cache y un limitador de peticiones de 100 por hora. " +
-                                "Tambien se utiliza Swagger para realizar una documentacion de los endpoints y su respuesta."));
+                        .description("This API provides weather information by consuming data from the OpenWeather API. " +
+                                "The goal is to offer weather data efficiently by implementing a caching system to reduce the number of calls to the OpenWeather API, using ETags to handle the validation of cached data, and a rate limiter of 100 requests per hour. " +
+                                "Swagger is also used to document the endpoints and their responses.")
+                );
     }
 }

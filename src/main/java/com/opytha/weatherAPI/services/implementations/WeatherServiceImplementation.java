@@ -42,7 +42,7 @@ public class WeatherServiceImplementation implements WeatherService {
         Client clientAuth = clientService.getAuthClient(email);
 
         if(clientAuth == null){
-            throw new BadRequestException("Usuario no autenticado");
+            throw new BadRequestException("User not signed up.");
         }
 
         // Construyo la URL de la API de OpenWeatherMap con el nombre de la ciudad
@@ -63,7 +63,7 @@ public class WeatherServiceImplementation implements WeatherService {
             throw new RuntimeException(e);
         }
 
-        QueryLog query = new QueryLog("Clima actual de: "+cityName, LocalDateTime.now());
+        QueryLog query = new QueryLog("Current Wather on: "+cityName, LocalDateTime.now());
 
         clientAuth.addQueryLog(query);
 
@@ -80,7 +80,7 @@ public class WeatherServiceImplementation implements WeatherService {
         Client clientAuth = clientService.getAuthClient(email);
 
         if(clientAuth == null){
-            throw new BadRequestException("Usuario no autenticado");
+            throw new BadRequestException("User not signed up.");
         }
 
         // Construyo la URL de la API de OpenWeatherMap con el nombre de la ciudad
@@ -101,7 +101,7 @@ public class WeatherServiceImplementation implements WeatherService {
             throw new RuntimeException(e);
         }
 
-        QueryLog query = new QueryLog("Pronostico de: "+cityName, LocalDateTime.now());
+        QueryLog query = new QueryLog("Forecast for: "+cityName, LocalDateTime.now());
 
         clientAuth.addQueryLog(query);
 
@@ -118,7 +118,7 @@ public class WeatherServiceImplementation implements WeatherService {
         Client clientAuth = clientService.getAuthClient(email);
 
         if(clientAuth == null){
-            throw new BadRequestException("Usuario no autenticado");
+            throw new BadRequestException("User not signed up.");
         }
 
         String url =    "https://api.openweathermap.org/geo/1.0/direct?q=" + cityName +
@@ -138,7 +138,7 @@ public class WeatherServiceImplementation implements WeatherService {
             throw new RuntimeException(e);
         }
 
-        QueryLog query = new QueryLog("Geolocacion de: "+cityName, LocalDateTime.now());
+        QueryLog query = new QueryLog("Geolocation of: "+cityName, LocalDateTime.now());
 
         clientAuth.addQueryLog(query);
 
@@ -155,13 +155,13 @@ public class WeatherServiceImplementation implements WeatherService {
         Client clientAuth = clientService.getAuthClient(email);
 
         if(clientAuth == null){
-            throw new BadRequestException("Usuario no autenticado");
+            throw new BadRequestException("User not signed up.");
         }
 
         List<GeocodeData> geolocationData = getGeolocationByCityName(cityName, email);
 
         if (geolocationData == null || geolocationData.isEmpty()) {
-            throw new BadRequestException("No se encontró geolocalización para la ciudad: " + cityName);
+            throw new BadRequestException("Can not found geolocation for: " + cityName);
         }
 
         double lat = geolocationData.getFirst().getLat();
@@ -183,7 +183,7 @@ public class WeatherServiceImplementation implements WeatherService {
             throw new RuntimeException(e);
         }
 
-        QueryLog query = new QueryLog("Contaminacion del aire de: "+cityName, LocalDateTime.now());
+        QueryLog query = new QueryLog("Air pollution for: "+cityName, LocalDateTime.now());
 
         clientAuth.addQueryLog(query);
 

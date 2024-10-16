@@ -49,7 +49,7 @@ public class ClientServiceImplementation implements ClientService {
     public Client findByEmail(String email) {
         Client client = clientRepository.findByEmail(email);
         if (client == null) {
-            throw new EntityNotFoundException("El cliente con email " + email + " no existe.");
+            throw new EntityNotFoundException("Client with mail: " + email + " does not exist.");
         }
         return client;
     }
@@ -60,7 +60,7 @@ public class ClientServiceImplementation implements ClientService {
         if (client != null) {
             clientRepository.delete(client);
         } else {
-            throw new EntityNotFoundException("El cliente con email " + email + " no existe.");
+            throw new EntityNotFoundException("Client with mail: " + email + " does not exist.");
         }
     }
 
@@ -68,7 +68,7 @@ public class ClientServiceImplementation implements ClientService {
     public void createNewClient(CreateClient createClient) {
 
         if(clientRepository.findByEmail(createClient.getEmail()) != null){
-            throw new BadRequestException("El email ya se encuentra registrado");
+            throw new BadRequestException("Email already registered.");
         }
 
         Client client = new Client(createClient.getFirstName(), createClient.getLastName(), createClient.getEmail(), passwordEncoder.encode(createClient.getPassword()));
