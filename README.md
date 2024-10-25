@@ -57,9 +57,9 @@ The API consumes data from OpenWeather:
 - **/swagger-ui/index.html** -> Access the Swagger documentation.
 - **/api/register** -> Endpoint for user creation by sending a JSON body to the server.
 
-### IMPORTANT
+### IMPORTANT 
 
-Use tools like Postman to make HTTP requests to the server, as there is currently no user interface available.
+Use tools like Postman to make HTTP requests to the server, as there is currently no user interface available.  
 
 To register, send a raw JSON body to `/api/register`:
 ```
@@ -112,24 +112,24 @@ This project uses JWT (JSON Web Token) for user authentication and authorization
 
 1. **Login**: When a user authenticates with the API via the `/api/login` endpoint, their credentials (email and password) are sent. If the credentials are valid, a JWT token is generated.
 
-    - **Token Generation**:
-        - The `JwtService` class is used to create the token. This class has a method `generateToken(UserDetails userDetails)` that takes the authenticated `UserDetails` object as a parameter.
-        - The token contains user information and their role, and it has a duration of one hour.
+   - **Token Generation**:
+      - The `JwtService` class is used to create the token. This class has a method `generateToken(UserDetails userDetails)` that takes the authenticated `UserDetails` object as a parameter.
+      - The token contains user information and their role, and it has a duration of one hour.
 
 2. **Token Usage**:
-    - The token must be included in the authorization header of requests to protected API endpoints using the "Bearer" scheme. For example:
-      ```
-      Authorization: Bearer <token>
-      ```
+   - The token must be included in the authorization header of requests to protected API endpoints using the "Bearer" scheme. For example:
+     ```
+     Authorization: Bearer <token>
+     ```
 
 3. **Token Validation**:
-    - The `JwtRequestFilter` class intercepts incoming requests and verifies the validity of the JWT token. If the token is valid and has not expired, the username is extracted from the token, and the authentication is set in the Spring security context.
+   - The `JwtRequestFilter` class intercepts incoming requests and verifies the validity of the JWT token. If the token is valid and has not expired, the username is extracted from the token, and the authentication is set in the Spring security context.
 
 4. **Error Handling**:
-    - If the token is invalid or has expired, access to the protected endpoints will be denied. A `CustomAuthenticationEntryPoint` is defined to handle authentication errors and send appropriate responses to the client.
+   - If the token is invalid or has expired, access to the protected endpoints will be denied. A `CustomAuthenticationEntryPoint` is defined to handle authentication errors and send appropriate responses to the client.
 
 5. **Roles and Permissions**:
-    - User roles are managed in the `UserDetailService` class, which assigns roles to users based on data from the database. When generating the token, the role is also included in the token claims.
+   - User roles are managed in the `UserDetailService` class, which assigns roles to users based on data from the database. When generating the token, the role is also included in the token claims.
 
 ### Example of Token Generation
 Upon successful authentication, a JSON response is returned that includes the token:
