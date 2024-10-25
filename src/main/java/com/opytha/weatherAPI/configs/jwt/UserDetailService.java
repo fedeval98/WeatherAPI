@@ -22,7 +22,7 @@ public class UserDetailService implements UserDetailsService {
             throw new UsernameNotFoundException(username);
         }
 
-        User.UserBuilder builder = org.springframework.security.core.userdetails.User.withUsername(username); // Fully qualify the Spring Security Client
+        User.UserBuilder builder = User.withUsername(username); // Fully qualify the Spring Security Client
         builder.password(client.getPassword()); // Use the custom client’s password
         builder.roles("CLIENT"); // Assign role
 

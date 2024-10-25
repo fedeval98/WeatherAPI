@@ -80,7 +80,7 @@ public class SecurityConfig {
     private static class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
         @Override
         public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Usuario no registrado");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User not registered");
         }
 
         @Bean//autenticamos a los usurios una vez logeados
