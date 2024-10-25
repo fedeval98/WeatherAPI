@@ -57,6 +57,30 @@ The API consumes data from OpenWeather:
 - **/swagger-ui/index.html** -> Access the Swagger documentation.
 - **/api/register** -> Endpoint for user creation by sending a JSON body to the server.
 
+### IMPORTANT 
+
+Use tools like Postman to make HTTP requests to the server, as there is currently no user interface available.  
+
+To register, send a raw JSON body to `/api/register`:
+```
+{
+  "firstName": "Name",
+  "lastName": "Lastname",
+  "email": "your@mail",
+  "password": "password"
+}
+```
+
+To log in, send a raw JSON body to `/api/login`:
+```
+{
+  "email": "your@mail",
+  "password": "password"
+}
+```
+
+**Consider checking `/swagger-ui/index.html` to explore all available requests.**
+
 ## Configuration
 
 ### Database
