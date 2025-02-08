@@ -5,7 +5,7 @@ This API provides weather information by consuming data from the OpenWeather API
 
 ## Technologies
 
-- **Language:** Java 23
+- **Language:** Java 21
 - **Framework:** Spring Boot 3.3.4
 - **Project Manager:** Maven
 

@@ -9,8 +9,8 @@ import com.opytha.weatherAPI.models.Client;
 import java.util.List;
 
 public interface WeatherService {
-    WeatherData getWeatherByCityName(String cityName, String email);
-    ForecastData getForecastByCityName(String cityName, String email);
-    List<GeocodeData> getGeolocationByCityName(String cityName, String email);
-    AirPollutioNData getPollutionByCityName(String cityName, String email);
+    WeatherData getWeatherByCityName(String cityName, String email, String lang, String unit);
+    ForecastData getForecastByCityName(String cityName, String email, String lang, String unit);
+    List<GeocodeData> getGeolocationByCityName(String cityName, String email, String lang, String unit);
+    AirPollutioNData getPollutionByCityName(String cityName, String email, String lang, String unit);
 }

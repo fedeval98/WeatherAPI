@@ -4,6 +4,8 @@ import com.opytha.weatherAPI.configs.jwt.JwtService;
 import com.opytha.weatherAPI.dtos.jwt.AuthRequest;
 import com.opytha.weatherAPI.dtos.jwt.AuthResponse;
 import com.opytha.weatherAPI.services.implementations.AuthServiceImplementation;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,10 +53,23 @@ public class AuthController {
             )
     })
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<?> login(@RequestBody AuthRequest authRequest, HttpServletResponse response) {
         try {
+            // Obtener el JWT de la implementación del servicio de autenticación
             String jwt = authServiceImplementation.login(authRequest.getEmail(), authRequest.getPassword());
-            return ResponseEntity.ok(new AuthResponse(jwt));
+
+            // Crear la cookie con el JWT
+            Cookie cookie = new Cookie("jwt", jwt);
+            cookie.setHttpOnly(true);  // Asegura que no sea accesible via JavaScript
+            cookie.setSecure(true);    // Asegura que solo se enviará a través de HTTPS
+            cookie.setPath("/");       // Define el ámbito de la cookie (en este caso, todo el dominio)
+            cookie.setMaxAge(60 * 60); // Duración de la cookie (1 hora)
+
+            // Establecer SameSite en el encabezado "Set-Cookie"
+            response.addHeader("Set-Cookie", "jwt=" + jwt + "; HttpOnly; Secure; Path=/; Max-Age=3600; SameSite=None");
+
+            // Responder sin el JWT en el cuerpo, solo la cookie
+            return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Collections.singletonMap("message", e.getMessage()));

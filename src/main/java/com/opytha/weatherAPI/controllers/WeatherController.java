@@ -1,15 +1,21 @@
 package com.opytha.weatherAPI.controllers;
 
+import com.opytha.weatherAPI.configs.jwt.JwtService;
+import com.opytha.weatherAPI.dtos.UnitLangDTO;
 import com.opytha.weatherAPI.dtos.openweather.AirPollutioNData;
 import com.opytha.weatherAPI.dtos.openweather.ForecastData;
 import com.opytha.weatherAPI.dtos.openweather.GeocodeData;
 import com.opytha.weatherAPI.dtos.openweather.WeatherData;
+import com.opytha.weatherAPI.services.ValidationService;
 import com.opytha.weatherAPI.services.WeatherService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
@@ -28,6 +34,12 @@ public class WeatherController {
 
     @Autowired
     private WeatherService weatherService;
+
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private ValidationService validationService;
 
     @Operation(
             summary = "Get current weather by city or location",
@@ -48,9 +60,40 @@ public class WeatherController {
     })
     @GetMapping("/weather/{cityName}")
     public ResponseEntity<WeatherData> getWeatherByCityName(@PathVariable String cityName,
+                                                            @RequestBody @Valid UnitLangDTO unitLangDTO,
                                                             @RequestHeader(value = HttpHeaders.IF_NONE_MATCH, required = false)String ifNoneMatch,
-                                                            Authentication authentication){
-        WeatherData weatherData = weatherService.getWeatherByCityName(cityName,authentication.getName());
+                                                            HttpServletRequest request){
+
+        // Obtener JWT desde las cookies
+        String token = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("jwt".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // Obtener usuario desde el token
+        String username = jwtService.extractUserName(token);
+        if (username == null || jwtService.isTokenExpired(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // Validations
+        String lang = unitLangDTO.getLang();
+        String unit = unitLangDTO.getUnit();
+
+        validationService.isValidLang(lang);
+        validationService.isValidUnit(unit);
+
+        WeatherData weatherData = weatherService.getWeatherByCityName(cityName,username,lang,unit);
 
         String eTag = generateETag(weatherData);
         if(ifNoneMatch != null && ifNoneMatch.equals(eTag)){
@@ -79,9 +122,41 @@ public class WeatherController {
     })
     @GetMapping("/forecast/{cityName}")
     public ResponseEntity<ForecastData> getWeather5daysByCityName(@PathVariable String cityName,
+                                                                  @RequestBody @Valid UnitLangDTO unitLangDTO,
                                                                   @RequestHeader(value = HttpHeaders.IF_NONE_MATCH, required = false)String ifNoneMatch,
-                                                                  Authentication authentication) {
-        ForecastData forecastData = weatherService.getForecastByCityName(cityName,authentication.getName());
+                                                                  HttpServletRequest request) {
+
+        // Obtener JWT desde las cookies
+        String token = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("jwt".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // Obtener usuario desde el token
+        String username = jwtService.extractUserName(token);
+        if (username == null || jwtService.isTokenExpired(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+
+        // Validations
+        String lang = unitLangDTO.getLang();
+        String unit = unitLangDTO.getUnit();
+
+        validationService.isValidLang(lang);
+        validationService.isValidUnit(unit);
+
+        ForecastData forecastData = weatherService.getForecastByCityName(cityName,username,lang,unit);
 
         String eTag = generateETag(forecastData);
         if(ifNoneMatch != null && ifNoneMatch.equals(eTag)){
@@ -110,9 +185,40 @@ public class WeatherController {
     })
     @GetMapping("/geo/{cityName}")
     public ResponseEntity<List<GeocodeData>> getGeolocationByCityName(@PathVariable String cityName,
+                                                                      @RequestBody @Valid UnitLangDTO unitLangDTO,
                                                                       @RequestHeader(value = HttpHeaders.IF_NONE_MATCH, required = false)String ifNoneMatch,
-                                                                      Authentication authentication) {
-        List<GeocodeData> geolocationData = weatherService.getGeolocationByCityName(cityName,authentication.getName());
+                                                                      HttpServletRequest request) {
+
+        // Obtener JWT desde las cookies
+        String token = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("jwt".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // Obtener usuario desde el token
+        String username = jwtService.extractUserName(token);
+        if (username == null || jwtService.isTokenExpired(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // Validations
+        String lang = unitLangDTO.getLang();
+        String unit = unitLangDTO.getUnit();
+
+        validationService.isValidLang(lang);
+        validationService.isValidUnit(unit);
+
+        List<GeocodeData> geolocationData = weatherService.getGeolocationByCityName(cityName,username,lang,unit);
 
         String eTag = generateETag(geolocationData);
         if(ifNoneMatch != null && ifNoneMatch.equals(eTag)){
@@ -140,9 +246,40 @@ public class WeatherController {
     })
     @GetMapping("/pollution/{cityName}")
     public ResponseEntity<AirPollutioNData> getPollutionByCityName(@PathVariable String cityName,
+                                                                   @RequestBody @Valid UnitLangDTO unitLangDTO,
                                                                    @RequestHeader(value = HttpHeaders.IF_NONE_MATCH, required = false)String ifNoneMatch,
-                                                                   Authentication authentication) {
-        AirPollutioNData airPollutioNData = weatherService.getPollutionByCityName(cityName,authentication.getName());
+                                                                   HttpServletRequest request) {
+
+        // Obtener JWT desde las cookies
+        String token = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("jwt".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // Obtener usuario desde el token
+        String username = jwtService.extractUserName(token);
+        if (username == null || jwtService.isTokenExpired(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // Validations
+        String lang = unitLangDTO.getLang();
+        String unit = unitLangDTO.getUnit();
+
+        validationService.isValidLang(lang);
+        validationService.isValidUnit(unit);
+
+        AirPollutioNData airPollutioNData = weatherService.getPollutionByCityName(cityName,username,lang,unit);
 
         String eTag = generateETag(airPollutioNData);
         if(ifNoneMatch != null && ifNoneMatch.equals(eTag)){

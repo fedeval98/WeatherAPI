@@ -35,9 +35,9 @@ public class WeatherServiceImplementation implements WeatherService {
     private String ApiKey;
 
     @Override
-    @Cacheable(value = "weatherCache", key = "#cityName")
+    @Cacheable(value = "weatherCache", key = "#cityName + '_' + #lang + '_' + #unit")
     @Transactional
-    public WeatherData getWeatherByCityName(String cityName, String email) {
+    public WeatherData getWeatherByCityName(String cityName, String email, String lang, String unit) {
 
         Client clientAuth = clientService.getAuthClient(email);
 
@@ -47,8 +47,8 @@ public class WeatherServiceImplementation implements WeatherService {
 
         // Construyo la URL de la API de OpenWeatherMap con el nombre de la ciudad
         String url =    "https://api.openweathermap.org/data/2.5/weather?q=" + cityName +
-                        "&units=metric" +
-                        "&lang=es" +
+                        "&units="+ unit +
+                        "&lang="+ lang +
                         "&appid="+ApiKey;
 
         // Realiza la llamada a la API y manejar la respuesta conviertiendolo en un JSON
@@ -73,9 +73,9 @@ public class WeatherServiceImplementation implements WeatherService {
     }
 
     @Override
-    @Cacheable(value = "forecastCache", key = "#cityName")
+    @Cacheable(value = "weatherCache", key = "#cityName + '_' + #lang + '_' + #unit")
     @Transactional
-    public ForecastData getForecastByCityName(String cityName, String email) {
+    public ForecastData getForecastByCityName(String cityName, String email, String lang, String unit) {
 
         Client clientAuth = clientService.getAuthClient(email);
 
@@ -85,8 +85,8 @@ public class WeatherServiceImplementation implements WeatherService {
 
         // Construyo la URL de la API de OpenWeatherMap con el nombre de la ciudad
         String url =    "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName +
-                        "&units=metric" +
-                        "&lang=es" +
+                        "&units="+ unit +
+                        "&lang="+ lang +
                         "&appid="+ApiKey;
 
         // Realiza la llamada a la API y manejar la respuesta conviertiendolo en un JSON
@@ -111,9 +111,9 @@ public class WeatherServiceImplementation implements WeatherService {
     }
 
     @Override
-    @Cacheable(value = "geolocationCache", key = "#cityName")
+    @Cacheable(value = "weatherCache", key = "#cityName + '_' + #lang + '_' + #unit")
     @Transactional
-    public List<GeocodeData> getGeolocationByCityName(String cityName, String email) {
+    public List<GeocodeData> getGeolocationByCityName(String cityName, String email, String lang, String unit) {
 
         Client clientAuth = clientService.getAuthClient(email);
 
@@ -123,8 +123,8 @@ public class WeatherServiceImplementation implements WeatherService {
 
         String url =    "https://api.openweathermap.org/geo/1.0/direct?q=" + cityName +
                         "&limit=5" +
-                        "&units=metric" +
-                        "&lang=es" +
+                        "&units="+ unit +
+                        "&lang="+ lang +
                         "&appid="+ApiKey;
 
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
@@ -148,9 +148,9 @@ public class WeatherServiceImplementation implements WeatherService {
     }
 
     @Override
-    @Cacheable(value = "airPollutionCache", key = "#cityName")
+    @Cacheable(value = "weatherCache", key = "#cityName + '_' + #lang + '_' + #unit")
     @Transactional
-    public AirPollutioNData getPollutionByCityName(String cityName, String email) {
+    public AirPollutioNData getPollutionByCityName(String cityName, String email, String lang, String unit) {
 
         Client clientAuth = clientService.getAuthClient(email);
 
@@ -158,7 +158,7 @@ public class WeatherServiceImplementation implements WeatherService {
             throw new BadRequestException("User not signed up.");
         }
 
-        List<GeocodeData> geolocationData = getGeolocationByCityName(cityName, email);
+        List<GeocodeData> geolocationData = getGeolocationByCityName(cityName, email,lang,unit);
 
         if (geolocationData == null || geolocationData.isEmpty()) {
             throw new BadRequestException("Can not found geolocation for: " + cityName);
@@ -169,8 +169,8 @@ public class WeatherServiceImplementation implements WeatherService {
 
         String url =    "https://api.openweathermap.org/data/2.5/air_pollution?lat="+lat +
                         "&lon="+ lon +
-                        "&units=metric" +
-                        "&lang=es" +
+                        "&units="+ unit +
+                        "&lang="+ lang +
                         "&appid="+ApiKey;
 
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);

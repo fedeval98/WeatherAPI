@@ -26,5 +26,6 @@ public class ForecastData {
         private Map<String, Double> rain; // mapeo para poder manejar el tipo rain.
         private ForecastSys sys;
         private String dt_txt;
+        private Map<String, String> snow;
     }
 }
